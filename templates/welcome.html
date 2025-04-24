@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenido</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container glass">
+    <h2><i class="fas fa-hands-clapping"></i> ¡Bienvenido, {{ username }}!</h2>
+    <p>Tu token ha sido generado correctamente.</p>
+
+    <!-- Mostrar el token -->
+    {% if token %}
+      <div class="token-box">
+        <p><strong>Tu Token:</strong></p>
+        <pre>{{ token }}</pre>
+      </div>
+    {% endif %}
+
+    <!-- Botones para acceder a los endpoints -->
+    <div class="buttons">
+      <button onclick="getPublic()"><i class="fas fa-globe"></i> /public</button>
+      <button onclick="getPrivate()"><i class="fas fa-lock"></i> /private</button>
+    </div>
+
+    <pre id="response-box">Respuesta aparecerá aquí...</pre>
+
+    <a href="{{ url_for('login') }}" class="btn"><i class="fas fa-arrow-left"></i> Volver al login</a>
+  </div>
+
+  <script>
+    const token = "{{ token }}";
+
+    async function getPublic() {
+      const res = await fetch('/public');
+      const data = await res.json();
+      document.getElementById('response-box').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function getPrivate() {
+      const res = await fetch('/private', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      document.getElementById('response-box').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

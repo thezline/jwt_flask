@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container glass">
+        <h2><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+        <form method="POST">
+            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit"><i class="fas fa-arrow-right-to-bracket"></i> Entrar</button>
+        </form>
+        <p>¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate</a></p>
+
+        <!-- Botones de acceso a los endpoints -->
+        <div class="buttons">
+            <button onclick="getPublic()"><i class="fas fa-globe"></i> /public</button>
+            <button onclick="getPrivate()"><i class="fas fa-lock"></i> /private</button>
+        </div>
+        <pre id="response-box">Respuesta aparecerá aquí...</pre>
+    </div>
+
+    <script>
+        async function getPublic() {
+            const res = await fetch('/public');
+            const data = await res.json();
+            document.getElementById('response-box').textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function getPrivate() {
+            const res = await fetch('/private');
+            const data = await res.json();
+            document.getElementById('response-box').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+
+</html>
